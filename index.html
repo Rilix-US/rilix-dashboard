@@ -9,66 +9,92 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#070e1c;
-  --surface:#0c1526;
-  --card:#111e33;
-  --card2:#162035;
-  --border:#1c2d47;
-  --border2:#243a5e;
-  --blue:#5b97cd;
-  --blue-l:#7ab3e0;
-  --blue-d:#3a6a9e;
+  /* Rilix Brand Colors — Pantone 7688 C */
+  --rilix-blue:#5b97cd;
+  --rilix-blue-light:#70adde;
+  --rilix-blue-dark:#366697;
+  --rilix-gradient:linear-gradient(180deg,#70adde,#366697);
+
+  /* Surfaces */
+  --bg:#06101e;
+  --surface:#0b1628;
+  --card:#101d32;
+  --card-hover:#142540;
+  --border:#1a2e4a;
+  --border2:#24406a;
+
+  /* Brand-derived palette */
+  --blue:var(--rilix-blue);
+  --blue-l:var(--rilix-blue-light);
+  --blue-d:var(--rilix-blue-dark);
   --blue-glow:rgba(91,151,205,.12);
-  --text:#dce8f5;
-  --muted:#7a9dbf;
-  --dim:#3a5270;
+
+  /* Text — WCAG AA compliant */
+  --text:#e0ecf8;
+  --muted:#94b4d0;
+  --dim:#5a7ea0;
+
+  /* Semantic */
   --green:#34d399;--green-bg:rgba(52,211,153,.1);
   --red:#f87171;--red-bg:rgba(248,113,113,.1);
   --amber:#fbbf24;--amber-bg:rgba(251,191,36,.1);
-  --gray:#64748b;--gray-bg:rgba(100,116,139,.1);
-  --font:'Inter',system-ui,sans-serif;
+  --gray:#7b8fa3;--gray-bg:rgba(123,143,163,.1);
+
+  /* Typography */
+  --font:'Inter',system-ui,-apple-system,sans-serif;
   --mono:'JetBrains Mono',monospace;
+  --base-size:15px;
 }
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
 
-/* HEADER */
-.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
-.brand{display:flex;align-items:center;gap:16px}
-.logo{font-size:24px;font-weight:700;letter-spacing:.18em;color:var(--blue-l);font-family:var(--mono)}
-.logo-sub{font-size:11px;color:var(--muted);letter-spacing:.05em;margin-top:1px}
-.vdiv{width:1px;height:36px;background:var(--border)}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:var(--base-size);line-height:1.55;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+
+/* ─── FOCUS & A11Y ─── */
+:focus-visible{outline:2px solid var(--rilix-blue);outline-offset:2px;border-radius:4px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ─── HEADER ─── */
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.brand{display:flex;align-items:center;gap:18px}
+.logo{font-size:26px;font-weight:700;letter-spacing:.18em;background:var(--rilix-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-family:var(--mono)}
+.logo-sub{font-size:11px;color:var(--muted);letter-spacing:.06em;margin-top:2px}
+.vdiv{width:1px;height:38px;background:var(--border)}
 .stats{display:flex;gap:28px}
+.stat{text-align:center}
 .stat-v{font-size:28px;font-weight:600;font-family:var(--mono);line-height:1}
-.stat-l{font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
+.stat-l{font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:4px}
 
-/* TOOLBAR */
-.toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 28px;border-bottom:1px solid var(--border);background:rgba(12,21,38,.8);backdrop-filter:blur(8px);position:sticky;top:57px;z-index:9}
+/* ─── TOOLBAR ─── */
+.toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 28px;border-bottom:1px solid var(--border);background:rgba(11,22,40,.85);backdrop-filter:blur(10px);position:sticky;top:61px;z-index:9}
 .tabs{display:flex;gap:2px;background:var(--surface);padding:3px;border-radius:10px;border:1px solid var(--border)}
-.tab{padding:7px 20px;border-radius:8px;border:none;background:transparent;color:var(--muted);font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;letter-spacing:.01em}
-.tab.active{background:var(--blue-d);color:#fff;box-shadow:0 0 12px rgba(91,151,205,.25)}
+.tab{display:inline-flex;align-items:center;gap:6px;padding:8px 20px;border-radius:8px;border:none;background:transparent;color:var(--muted);font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s ease;letter-spacing:.01em}
+.tab svg{width:16px;height:16px;flex-shrink:0}
+.tab.active{background:var(--rilix-blue-dark);color:#fff;box-shadow:0 2px 12px rgba(91,151,205,.3)}
 .tab:hover:not(.active){background:var(--card);color:var(--text)}
 
-/* CLOCK */
+/* ─── CLOCK ─── */
 .clock-wrap{display:flex;align-items:center;gap:16px}
 .clock{font-family:var(--mono);font-size:24px;font-weight:500;color:var(--text);letter-spacing:.05em}
-.clock-date{font-size:11px;color:var(--muted);margin-top:2px;text-transform:capitalize}
+.clock-date{font-size:12px;color:var(--muted);margin-top:2px;text-transform:capitalize}
 .upd-row{display:flex;align-items:center;gap:8px}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;transition:background .3s}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;transition:background .3s}
 .dot.loading{background:var(--amber);animation:blink 1s infinite}
+.dot.error{background:var(--red)}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.upd-txt{font-size:11px;color:var(--dim)}
-.btn-refresh{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer;transition:all .15s;font-family:var(--font)}
-.btn-refresh:hover{border-color:var(--blue);color:var(--blue-l)}
+.upd-txt{font-size:12px;color:var(--dim)}
+.btn-refresh{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:6px 14px;font-size:12px;cursor:pointer;transition:all .2s;font-family:var(--font);display:inline-flex;align-items:center;gap:5px}
+.btn-refresh:hover{border-color:var(--rilix-blue);color:var(--rilix-blue-light);background:rgba(91,151,205,.06)}
+.btn-refresh svg{width:14px;height:14px}
 
-/* MAIN */
-.main{padding:22px 28px 32px;min-height:calc(100vh - 110px)}
+/* ─── MAIN ─── */
+.main{padding:24px 28px 40px;min-height:calc(100vh - 120px);transition:opacity .25s ease}
+.main.fading{opacity:0}
 
-/* KANBAN */
+/* ─── KANBAN ─── */
 .kanban{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-.k-col{}
-.k-hdr{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:10px 10px 0 0;margin-bottom:12px}
+.k-col{min-width:0}
+.k-hdr{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:12px 12px 0 0;margin-bottom:12px}
 .k-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
-.k-count{font-family:var(--mono);font-size:22px;font-weight:700}
+.k-count{font-family:var(--mono);font-size:24px;font-weight:700}
 .k-andamento{background:var(--blue-glow);border-bottom:2px solid var(--blue)}
 .k-andamento .k-title,.k-andamento .k-count{color:var(--blue-l)}
 .k-bloqueado{background:var(--red-bg);border-bottom:2px solid var(--red)}
@@ -77,140 +103,227 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .k-backlog .k-title,.k-backlog .k-count{color:var(--gray)}
 .k-concluido{background:var(--green-bg);border-bottom:2px solid var(--green)}
 .k-concluido .k-title,.k-concluido .k-count{color:var(--green)}
+.k-toggle{background:none;border:none;color:inherit;cursor:pointer;font-size:11px;opacity:.7;transition:opacity .2s;padding:2px 4px}
+.k-toggle:hover{opacity:1}
+.k-body{overflow:hidden;transition:max-height .3s ease,opacity .3s ease}
+.k-body.collapsed{max-height:0 !important;opacity:0}
 
-/* CARDS */
-.card{background:var(--card);border:1px solid var(--border);border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:8px;border-left:3px solid transparent;transition:border-color .2s}
+/* ─── CARDS ─── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:8px;border-left:3px solid transparent;transition:all .2s ease}
+.card:hover{background:var(--card-hover);border-color:var(--border2)}
 .card.s-and{border-left-color:var(--blue)}
-.card.s-blo{border-left-color:var(--red);border-color:rgba(248,113,113,.2)}
+.card.s-blo{border-left-color:var(--red);border-color:rgba(248,113,113,.18)}
 .card.s-bac{border-left-color:var(--gray)}
 .card.s-con{border-left-color:var(--green)}
-.card.overdue{border-color:rgba(248,113,113,.35)}
-.card-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;line-height:1.45}
+.card.overdue{border-color:rgba(248,113,113,.3);background:rgba(248,113,113,.03)}
+.card-name{font-size:14px;font-weight:500;color:var(--text);margin-bottom:8px;line-height:1.45}
 .card-meta{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
-.empty-col{text-align:center;padding:28px 0;color:var(--dim);font-size:12px}
+.empty-col{text-align:center;padding:32px 16px;color:var(--dim);font-size:13px;border:1px dashed var(--border);border-radius:10px;margin:4px 0}
 
-/* BADGES */
-.b{display:inline-flex;align-items:center;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:500;white-space:nowrap;letter-spacing:.02em}
+/* ─── BADGES ─── */
+.b{display:inline-flex;align-items:center;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:500;white-space:nowrap;letter-spacing:.02em}
 .b-cli{background:rgba(91,151,205,.14);color:var(--blue-l);border:1px solid rgba(91,151,205,.2)}
 .b-urg{background:var(--red-bg);color:var(--red)}
 .b-alt{background:var(--amber-bg);color:var(--amber)}
-.b-med{background:rgba(251,191,36,.07);color:#c9961e}
+.b-med{background:rgba(251,191,36,.07);color:#d4a620}
 .b-bai{background:var(--gray-bg);color:var(--gray)}
 .b-per{background:var(--surface);color:var(--muted);border:1px solid var(--border)}
-.b-dt{background:transparent;color:var(--muted);font-family:var(--mono);font-size:10px}
-.b-dt.od{color:var(--red)}
+.b-dt{background:transparent;color:var(--muted);font-family:var(--mono);font-size:11px}
+.b-dt.od{color:var(--red);font-weight:600}
 .b-s-and{background:rgba(91,151,205,.12);color:var(--blue-l)}
 .b-s-blo{background:var(--red-bg);color:var(--red)}
 .b-s-bac{background:var(--gray-bg);color:var(--gray)}
 .b-s-con{background:var(--green-bg);color:var(--green)}
 
-/* TIMELINE */
-.tl-row{display:flex;gap:16px;align-items:flex-start;padding:14px 18px;background:var(--card);border:1px solid var(--border);border-radius:0 12px 12px 0;margin-bottom:10px;border-left:3px solid transparent}
-.tl-row.od-row{border-left-color:var(--red);border-color:rgba(248,113,113,.2)}
+/* ─── TIMELINE ─── */
+.tl-group{margin-bottom:28px}
+.tl-group-label{font-size:12px;font-weight:600;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;padding:8px 4px 12px;display:flex;align-items:center;gap:10px}
+.tl-group-label::after{content:"";flex:1;height:1px;background:var(--border)}
+.tl-row{display:flex;gap:16px;align-items:flex-start;padding:14px 18px;background:var(--card);border:1px solid var(--border);border-radius:0 12px 12px 0;margin-bottom:10px;border-left:3px solid transparent;transition:all .2s ease}
+.tl-row:hover{background:var(--card-hover)}
+.tl-row.od-row{border-left-color:var(--red);border-color:rgba(248,113,113,.18)}
 .tl-row.urg-row{border-left-color:var(--amber)}
 .tl-row.ok-row{border-left-color:var(--blue)}
-.tl-date{min-width:72px;text-align:center;flex-shrink:0}
+.tl-date{min-width:76px;text-align:center;flex-shrink:0}
 .tl-day{font-family:var(--mono);font-size:22px;font-weight:600;line-height:1}
-.tl-dif{font-size:11px;margin-top:4px}
+.tl-dif{font-size:12px;margin-top:4px}
 .od-txt .tl-day,.od-txt .tl-dif{color:var(--red)}
 .urg-txt .tl-day,.urg-txt .tl-dif{color:var(--amber)}
 .ok-txt .tl-day{color:var(--text)}.ok-txt .tl-dif{color:var(--muted)}
 .tl-sep{width:1px;align-self:stretch;background:var(--border);flex-shrink:0}
 .tl-name{font-size:14px;font-weight:500;color:var(--text);margin-bottom:7px}
 .tl-meta{display:flex;flex-wrap:wrap;gap:5px}
-.sec-label{font-size:11px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin:24px 0 10px 4px}
-.nd-row{display:flex;gap:10px;align-items:center;padding:9px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;opacity:.75}
-.nd-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+.sec-label{font-size:12px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin:28px 0 12px 4px;display:flex;align-items:center;gap:10px}
+.sec-label::after{content:"";flex:1;height:1px;background:var(--border)}
+.nd-row{display:flex;gap:10px;align-items:center;padding:10px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;transition:background .2s}
+.nd-row:hover{background:var(--card)}
+.nd-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .nd-name{font-size:13px;flex:1;color:var(--text)}
 
-/* CLIENTS */
-.cli-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(292px,1fr));gap:14px}
-.cli-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
-.cli-hdr{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;background:rgba(91,151,205,.04);gap:10px}
-.cli-name{font-size:14px;font-weight:600;color:var(--blue-l)}
-.cli-sub{font-size:11px;color:var(--muted);margin-top:2px}
+/* ─── CLIENTS ─── */
+.cli-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.cli-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .2s}
+.cli-card:hover{border-color:var(--border2)}
+.cli-hdr{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;background:rgba(91,151,205,.04);gap:10px}
+.cli-name{font-size:15px;font-weight:600;color:var(--blue-l)}
+.cli-sub{font-size:12px;color:var(--muted);margin-top:3px}
 .cli-stats{display:flex;border-bottom:1px solid var(--border)}
-.cs{flex:1;text-align:center;padding:9px 4px;border-right:1px solid var(--border)}
+.cs{flex:1;text-align:center;padding:10px 4px;border-right:1px solid var(--border)}
 .cs:last-child{border-right:none}
-.cs-v{font-family:var(--mono);font-size:20px;font-weight:700;line-height:1}
-.cs-l{font-size:10px;color:var(--dim);margin-top:3px;letter-spacing:.04em}
-.cli-projs{padding:10px 14px}
-.cp-row{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)}
+.cs-v{font-family:var(--mono);font-size:22px;font-weight:700;line-height:1}
+.cs-l{font-size:11px;color:var(--dim);margin-top:4px;letter-spacing:.04em}
+.cli-projs{padding:12px 16px}
+.cp-row{display:flex;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)}
 .cp-row:last-child{border-bottom:none}
-.cp-sq{width:7px;height:7px;border-radius:2px;flex-shrink:0}
-.cp-n{font-size:12px;flex:1;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cp-sq{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.cp-n{font-size:13px;flex:1;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* LOADING / ERROR */
-.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:22px}
-.l-logo{font-size:52px;font-weight:700;letter-spacing:.2em;color:var(--blue);opacity:.25;font-family:var(--mono)}
-.l-bar{width:220px;height:2px;background:var(--border);border-radius:2px;overflow:hidden;position:relative}
-.l-inner{position:absolute;top:0;height:100%;width:40%;background:var(--blue);animation:slide 1.5s ease-in-out infinite}
+/* ─── TOOLTIP ─── */
+.card[data-tooltip]{position:relative}
+.card[data-tooltip]:hover::after{content:attr(data-tooltip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);color:var(--text);padding:6px 12px;border-radius:8px;font-size:12px;white-space:nowrap;z-index:20;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.4);animation:fadeIn .15s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateX(-50%) translateY(4px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* ─── LOADING / ERROR ─── */
+.loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:24px}
+.l-logo{font-size:52px;font-weight:700;letter-spacing:.2em;background:var(--rilix-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;opacity:.4;font-family:var(--mono)}
+.l-bar{width:240px;height:3px;background:var(--border);border-radius:3px;overflow:hidden;position:relative}
+.l-inner{position:absolute;top:0;height:100%;width:40%;background:var(--rilix-gradient);border-radius:3px;animation:slide 1.5s ease-in-out infinite}
 @keyframes slide{0%{left:-40%}100%{left:100%}}
-.l-txt{font-size:13px;color:var(--muted);letter-spacing:.04em}
-.error{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:14px;text-align:center;padding:0 40px}
+.l-txt{font-size:14px;color:var(--muted);letter-spacing:.04em}
+.error-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:16px;text-align:center;padding:0 40px}
 
-/* SCROLLBAR */
-::-webkit-scrollbar{width:5px}
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--border2)}
 
-/* LAST UPDATE BAR */
-.last-upd{font-size:11px;color:var(--dim)}
+/* ─── LAST UPDATE ─── */
+.last-upd{font-size:12px;color:var(--dim)}
+
+/* ─── RESPONSIVE ─── */
+
+/* Tablet / Tela menor */
+@media(max-width:1024px){
+  .kanban{grid-template-columns:repeat(2,1fr)}
+  .stats{gap:18px}
+  .stat-v{font-size:22px}
+  .hdr{padding:12px 20px}
+  .toolbar{padding:10px 20px}
+  .main{padding:20px 20px 32px}
+}
+
+/* Mobile */
+@media(max-width:640px){
+  .kanban{grid-template-columns:1fr}
+  .hdr{flex-direction:column;gap:12px;align-items:stretch}
+  .brand{justify-content:space-between}
+  .clock-wrap{justify-content:space-between}
+  .stats{gap:14px}
+  .stat-v{font-size:20px}
+  .toolbar{flex-direction:column;gap:8px;top:auto;position:relative}
+  .tabs{width:100%;justify-content:center}
+  .main{padding:16px 14px 28px}
+  .cli-grid{grid-template-columns:1fr}
+  .tl-row{flex-direction:column;gap:8px}
+  .tl-date{display:flex;align-items:center;gap:12px;min-width:0;text-align:left}
+  .tl-sep{width:100%;height:1px}
+}
+
+/* TV / Monitor grande — otimizado para visualização à distância */
+@media(min-width:1600px){
+  :root{--base-size:18px}
+  .logo{font-size:32px}
+  .stat-v{font-size:36px}
+  .k-count{font-size:30px}
+  .card-name{font-size:17px}
+  .b{font-size:13px;padding:4px 12px}
+  .clock{font-size:30px}
+  .tl-day{font-size:28px}
+  .tl-name{font-size:17px}
+  .cs-v{font-size:28px}
+  .cli-name{font-size:18px}
+}
+
+@media(min-width:2200px){
+  :root{--base-size:20px}
+  .kanban{gap:24px}
+  .card{padding:18px 20px;margin-bottom:12px}
+  .card-name{font-size:19px}
+  .b{font-size:14px;padding:5px 14px}
+  .stat-v{font-size:42px}
+  .k-count{font-size:36px}
+  .logo{font-size:38px}
+}
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
-<div class="hdr">
+<header class="hdr" role="banner">
   <div class="brand">
     <div>
-      <div class="logo">RILIX</div>
+      <div class="logo" aria-label="Rilix">RILIX</div>
       <div class="logo-sub">Gestão de Clientes</div>
     </div>
-    <div class="vdiv"></div>
-    <div class="stats" id="stats">
-      <div><div class="stat-v" style="color:var(--muted)">—</div><div class="stat-l">Carregando</div></div>
+    <div class="vdiv" aria-hidden="true"></div>
+    <div class="stats" id="stats" aria-label="Resumo de projetos">
+      <div class="stat"><div class="stat-v" style="color:var(--muted)">—</div><div class="stat-l">Carregando</div></div>
     </div>
   </div>
   <div class="clock-wrap">
     <div>
       <div class="upd-row" style="justify-content:flex-end;margin-bottom:4px">
-        <div class="dot loading" id="dot"></div>
-        <span class="upd-txt" id="upd">Carregando...</span>
-        <button class="btn-refresh" onclick="loadData()">↻ Atualizar</button>
+        <div class="dot loading" id="dot" role="status" aria-label="Status da conexão"></div>
+        <span class="upd-txt" id="upd" aria-live="polite">Carregando...</span>
+        <button class="btn-refresh" onclick="loadData()" aria-label="Atualizar dados">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+          Atualizar
+        </button>
       </div>
       <div style="display:flex;align-items:baseline;gap:12px;justify-content:flex-end">
         <div>
-          <div class="clock" id="clock">--:--</div>
+          <div class="clock" id="clock" aria-label="Relógio">--:--</div>
           <div class="clock-date" id="cdate">—</div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</header>
 
 <!-- TOOLBAR -->
-<div class="toolbar">
-  <div class="tabs">
-    <button class="tab active" onclick="setView('kanban',this)">⬛ Kanban</button>
-    <button class="tab" onclick="setView('timeline',this)">📅 Timeline</button>
-    <button class="tab" onclick="setView('clients',this)">👥 Por cliente</button>
+<nav class="toolbar" role="navigation" aria-label="Visualizações">
+  <div class="tabs" role="tablist">
+    <button class="tab active" role="tab" aria-selected="true" onclick="setView('kanban',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Kanban
+    </button>
+    <button class="tab" role="tab" aria-selected="false" onclick="setView('timeline',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Timeline
+    </button>
+    <button class="tab" role="tab" aria-selected="false" onclick="setView('clients',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Por cliente
+    </button>
   </div>
-  <span class="last-upd" id="last-upd"></span>
-</div>
+  <span class="last-upd" id="last-upd" aria-live="polite"></span>
+</nav>
 
 <!-- MAIN -->
-<div class="main" id="main">
-  <div class="loading">
-    <div class="l-logo">RILIX</div>
-    <div class="l-bar"><div class="l-inner"></div></div>
+<main class="main" id="main" role="main">
+  <div class="loading-screen">
+    <div class="l-logo" aria-hidden="true">RILIX</div>
+    <div class="l-bar" role="progressbar"><div class="l-inner"></div></div>
     <div class="l-txt">Conectando ao Notion...</div>
   </div>
-</div>
+</main>
 
 <script>
 "use strict";
 let VIEW = "kanban", PROJECTS = [], CLIENTS = [];
+let concluídoCollapsed = true;
 
 /* ── Clock ── */
 function tick() {
@@ -221,10 +334,10 @@ function tick() {
 setInterval(tick, 1000); tick();
 
 /* ── Helpers ── */
-const SC  = s => ({Em Andamento:"s-and",Bloqueado:"s-blo",Backlog:"s-bac",Concluído:"s-con"}[s]||"s-bac");
-const SB  = s => ({Em Andamento:"b-s-and",Bloqueado:"b-s-blo",Backlog:"b-s-bac",Concluído:"b-s-con"}[s]||"b-s-bac");
-const PB  = p => ({Urgente:"b-urg",Alta:"b-alt",Média:"b-med",Baixa:"b-bai"}[p]||"b-bai");
-const CLR = s => ({Em Andamento:"#5b97cd",Bloqueado:"#f87171",Backlog:"#64748b",Concluído:"#34d399"}[s]||"#64748b");
+const SC  = s => ({["Em Andamento"]:"s-and",Bloqueado:"s-blo",Backlog:"s-bac",["Concluído"]:"s-con"}[s]||"s-bac");
+const SB  = s => ({["Em Andamento"]:"b-s-and",Bloqueado:"b-s-blo",Backlog:"b-s-bac",["Concluído"]:"b-s-con"}[s]||"b-s-bac");
+const PB  = p => ({Urgente:"b-urg",Alta:"b-alt",["Média"]:"b-med",Baixa:"b-bai"}[p]||"b-bai");
+const CLR = s => ({["Em Andamento"]:"#5b97cd",Bloqueado:"#f87171",Backlog:"#7b8fa3",["Concluído"]:"#34d399"}[s]||"#7b8fa3");
 
 function fmtDate(d) {
   return new Date(d).toLocaleDateString("pt-BR",{day:"2-digit",month:"short"});
@@ -232,12 +345,21 @@ function fmtDate(d) {
 function isOD(p) {
   return p.prazo && new Date(p.prazo) < new Date() && p.status !== "Concluído";
 }
+
+function tooltipText(p) {
+  const parts = [];
+  if (p.tipo) parts.push(p.tipo);
+  if (p.percentual) parts.push(p.percentual + "% concluído");
+  if (p.prazo) parts.push("Prazo: " + fmtDate(p.prazo));
+  return parts.join(" · ");
+}
+
 function metaHtml(p, showStatus) {
   let h = "";
-  if (p.cliente) h += `<span class="b b-cli">${p.cliente}</span>`;
-  if (showStatus) h += `<span class="b ${SB(p.status)}">${p.status}</span>`;
-  if (p.prioridade) h += `<span class="b ${PB(p.prioridade)}">${p.prioridade}</span>`;
-  if (p.responsavel) h += `<span class="b b-per">${p.responsavel}</span>`;
+  if (p.cliente) h += `<span class="b b-cli">${esc(p.cliente)}</span>`;
+  if (showStatus) h += `<span class="b ${SB(p.status)}">${esc(p.status)}</span>`;
+  if (p.prioridade) h += `<span class="b ${PB(p.prioridade)}">${esc(p.prioridade)}</span>`;
+  if (p.responsavel) h += `<span class="b b-per">${esc(p.responsavel)}</span>`;
   if (p.prazo) {
     const od = isOD(p);
     h += `<span class="b b-dt${od?" od":""}">${fmtDate(p.prazo)}${od?" · atrasado":""}</span>`;
@@ -245,10 +367,27 @@ function metaHtml(p, showStatus) {
   return h;
 }
 
+function esc(s) {
+  const d = document.createElement("div");
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+/* ── View transition ── */
+function transitionView(renderFn) {
+  const main = document.getElementById("main");
+  main.classList.add("fading");
+  setTimeout(() => {
+    renderFn();
+    main.classList.remove("fading");
+  }, 150);
+}
+
 /* ── Fetch ── */
 async function loadData() {
   const dot = document.getElementById("dot");
   dot.className = "dot loading";
+  dot.removeAttribute("style");
   document.getElementById("upd").textContent = "Atualizando...";
   try {
     const r = await fetch("/api/data");
@@ -263,17 +402,20 @@ async function loadData() {
     renderStats();
     renderView();
   } catch(e) {
-    dot.className = "dot"; dot.style.background = "var(--red)";
-    document.getElementById("upd").textContent = "Erro";
+    dot.className = "dot error";
+    document.getElementById("upd").textContent = "Erro na conexão";
     document.getElementById("main").innerHTML = `
-      <div class="error">
-        <div style="font-size:48px">⚠️</div>
-        <div style="color:var(--red);font-size:18px;font-weight:600">Erro ao conectar com o Notion</div>
-        <div style="color:var(--muted);font-size:13px">${e.message}</div>
-        <div style="color:var(--dim);font-size:12px;margin-top:4px">
-          Configure o <code style="background:var(--surface);padding:2px 6px;border-radius:4px">NOTION_TOKEN</code> nas variáveis de ambiente do Vercel
+      <div class="error-screen">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div style="color:var(--red);font-size:20px;font-weight:600">Erro ao conectar com o Notion</div>
+        <div style="color:var(--muted);font-size:14px;max-width:480px">${esc(e.message)}</div>
+        <div style="color:var(--dim);font-size:13px;margin-top:4px">
+          Configure o <code style="background:var(--surface);padding:3px 8px;border-radius:5px;font-family:var(--mono)">NOTION_TOKEN</code> nas variáveis de ambiente do Vercel
         </div>
-        <button class="btn-refresh" onclick="loadData()" style="padding:10px 28px;font-size:14px;margin-top:8px">Tentar novamente</button>
+        <button class="btn-refresh" onclick="loadData()" style="padding:12px 32px;font-size:14px;margin-top:12px" aria-label="Tentar novamente">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+          Tentar novamente
+        </button>
       </div>`;
   }
 }
@@ -282,19 +424,25 @@ function renderStats() {
   const a = PROJECTS.filter(p=>p.status==="Em Andamento").length;
   const b = PROJECTS.filter(p=>p.status==="Bloqueado").length;
   const k = PROJECTS.filter(p=>p.status==="Backlog").length;
+  const c = PROJECTS.filter(p=>p.status==="Concluído").length;
   document.getElementById("stats").innerHTML = [
-    ["Em Andamento", a, "#5b97cd"],
-    ["Bloqueado",    b, "#f87171"],
-    ["Backlog",      k, "#64748b"],
-    ["Total",        PROJECTS.length, "#7a9dbf"],
-  ].map(([l,v,c]) => `<div><div class="stat-v" style="color:${c}">${v}</div><div class="stat-l">${l}</div></div>`).join("");
+    ["Em Andamento", a, "var(--rilix-blue-light)"],
+    ["Bloqueado",    b, "var(--red)"],
+    ["Backlog",      k, "var(--gray)"],
+    ["Concluído",    c, "var(--green)"],
+    ["Total",        PROJECTS.length, "var(--muted)"],
+  ].map(([l,v,c]) => `<div class="stat"><div class="stat-v" style="color:${c}">${v}</div><div class="stat-l">${l}</div></div>`).join("");
 }
 
 function setView(v, btn) {
   VIEW = v;
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".tab").forEach(t => {
+    t.classList.remove("active");
+    t.setAttribute("aria-selected", "false");
+  });
   btn.classList.add("active");
-  renderView();
+  btn.setAttribute("aria-selected", "true");
+  transitionView(renderView);
 }
 
 function renderView() {
@@ -309,25 +457,39 @@ function renderKanban() {
     {key:"Em Andamento", cls:"k-andamento"},
     {key:"Bloqueado",    cls:"k-bloqueado"},
     {key:"Backlog",      cls:"k-backlog"},
-    {key:"Concluído",   cls:"k-concluido"},
+    {key:"Concluído",    cls:"k-concluido", collapsible:true},
   ];
-  const html = `<div class="kanban">` + cols.map(({key,cls}) => {
+  const html = `<div class="kanban">` + cols.map(({key,cls,collapsible}) => {
     const items = PROJECTS.filter(p=>p.status===key);
+    const isCollapsed = collapsible && concluídoCollapsed && items.length > 0;
+    const toggleBtn = collapsible && items.length > 0
+      ? `<button class="k-toggle" onclick="toggleConcluido()" aria-label="${isCollapsed ? 'Expandir' : 'Colapsar'} concluídos">${isCollapsed ? '▸ mostrar' : '▾ ocultar'}</button>`
+      : '';
     return `<div class="k-col">
       <div class="k-hdr ${cls}">
-        <span class="k-title">${key}</span>
+        <span class="k-title">${esc(key)} ${toggleBtn}</span>
         <span class="k-count">${items.length}</span>
       </div>
+      <div class="k-body${isCollapsed ? ' collapsed' : ''}" style="max-height:${isCollapsed ? '0' : items.length * 120 + 'px'}">
       ${items.length===0
-        ? `<div class="empty-col">— vazio —</div>`
-        : items.map(p=>`<div class="card ${SC(p.status)}${isOD(p)?" overdue":""}">
-            <div class="card-name">${p.name}</div>
+        ? `<div class="empty-col">Nenhum projeto</div>`
+        : items.map(p=>{
+          const tt = tooltipText(p);
+          return `<div class="card ${SC(p.status)}${isOD(p)?" overdue":""}"${tt ? ` data-tooltip="${esc(tt)}"`:""}>
+            <div class="card-name">${esc(p.name)}</div>
             <div class="card-meta">${metaHtml(p,false)}</div>
-          </div>`).join("")
+          </div>`;
+        }).join("")
       }
+      </div>
     </div>`;
   }).join("") + `</div>`;
   document.getElementById("main").innerHTML = html;
+}
+
+function toggleConcluido() {
+  concluídoCollapsed = !concluídoCollapsed;
+  renderKanban();
 }
 
 /* ── TIMELINE ── */
@@ -335,53 +497,104 @@ function renderTimeline() {
   const today = new Date();
   const withD = PROJECTS.filter(p=>p.prazo&&p.status!=="Concluído").sort((a,b)=>new Date(a.prazo)-new Date(b.prazo));
   const noD   = PROJECTS.filter(p=>!p.prazo&&p.status!=="Concluído");
-  let html = "";
 
+  if (!withD.length && !noD.length) {
+    document.getElementById("main").innerHTML = `<div style="text-align:center;padding:80px 0;color:var(--dim);font-size:15px">Nenhum projeto ativo</div>`;
+    return;
+  }
+
+  // Group by week
+  const groups = {};
   withD.forEach(p => {
     const pDate = new Date(p.prazo);
     const diff  = Math.round((pDate-today)/86400000);
-    const od    = diff < 0;
-    const urg   = diff >= 0 && diff <= 3;
-    const rowCls = od?"od-row":urg?"urg-row":"ok-row";
-    const txtCls = od?"od-txt":urg?"urg-txt":"ok-txt";
-    html += `<div class="tl-row ${rowCls}">
-      <div class="tl-date ${txtCls}">
-        <div class="tl-day">${pDate.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})}</div>
-        <div class="tl-dif">${od?Math.abs(diff)+"d atraso":diff===0?"hoje":diff+"d"}</div>
-      </div>
-      <div class="tl-sep"></div>
-      <div style="flex:1;min-width:0">
-        <div class="tl-name">${p.name}</div>
-        <div class="tl-meta">${metaHtml(p,true)}</div>
-      </div>
-    </div>`;
+    let groupKey, groupLabel;
+    if (diff < 0) {
+      groupKey = "0-atrasado";
+      groupLabel = "Atrasados";
+    } else if (diff <= 7) {
+      groupKey = "1-semana";
+      groupLabel = "Esta semana";
+    } else if (diff <= 14) {
+      groupKey = "2-proxima";
+      groupLabel = "Próxima semana";
+    } else if (diff <= 30) {
+      groupKey = "3-mes";
+      groupLabel = "Este mês";
+    } else {
+      groupKey = "4-futuro";
+      groupLabel = "Futuro";
+    }
+    if (!groups[groupKey]) groups[groupKey] = {label: groupLabel, items: []};
+    groups[groupKey].items.push({...p, diff, pDate});
+  });
+
+  let html = "";
+  Object.keys(groups).sort().forEach(key => {
+    const g = groups[key];
+    html += `<div class="tl-group">`;
+    html += `<div class="tl-group-label">${g.label} (${g.items.length})</div>`;
+    g.items.forEach(p => {
+      const od    = p.diff < 0;
+      const urg   = p.diff >= 0 && p.diff <= 3;
+      const rowCls = od?"od-row":urg?"urg-row":"ok-row";
+      const txtCls = od?"od-txt":urg?"urg-txt":"ok-txt";
+      html += `<div class="tl-row ${rowCls}">
+        <div class="tl-date ${txtCls}">
+          <div class="tl-day">${p.pDate.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})}</div>
+          <div class="tl-dif">${od?Math.abs(p.diff)+"d atraso":p.diff===0?"hoje":p.diff+"d"}</div>
+        </div>
+        <div class="tl-sep"></div>
+        <div style="flex:1;min-width:0">
+          <div class="tl-name">${esc(p.name)}</div>
+          <div class="tl-meta">${metaHtml(p,true)}</div>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
   });
 
   if (noD.length) {
-    html += `<div class="sec-label">Sem prazo definido</div>`;
+    html += `<div class="sec-label">Sem prazo definido (${noD.length})</div>`;
     noD.forEach(p => {
       html += `<div class="nd-row">
         <div class="nd-dot" style="background:${CLR(p.status)}"></div>
-        <span class="nd-name">${p.name}</span>
-        ${p.cliente?`<span class="b b-cli">${p.cliente}</span>`:""}
-        <span class="b ${SB(p.status)}">${p.status}</span>
+        <span class="nd-name">${esc(p.name)}</span>
+        ${p.cliente?`<span class="b b-cli">${esc(p.cliente)}</span>`:""}
+        <span class="b ${SB(p.status)}">${esc(p.status)}</span>
       </div>`;
     });
   }
 
-  if (!withD.length && !noD.length) html = `<div style="text-align:center;padding:60px 0;color:var(--dim)">Nenhum projeto ativo</div>`;
   document.getElementById("main").innerHTML = html;
 }
 
 /* ── CLIENTS ── */
 function renderClients() {
-  const enriched = CLIENTS.map(c => ({
-    ...c,
-    projects: PROJECTS.filter(p => p.cliente && p.cliente.toLowerCase().includes(c.name.split(/[/,]/)[0].trim().toLowerCase()))
-  })).filter(c=>c.projects.length>0);
+  const enriched = CLIENTS.map(c => {
+    const cNameNorm = c.name.split(/[/,]/)[0].trim().toLowerCase();
+    return {
+      ...c,
+      projects: PROJECTS.filter(p => p.cliente && p.cliente.toLowerCase() === cNameNorm)
+    };
+  }).filter(c=>c.projects.length>0);
+
+  // Fallback: projects not matched by exact match
+  const matchedClients = new Set(enriched.flatMap(c => c.projects.map(p => p.name)));
+  const unmatched = PROJECTS.filter(p => p.cliente && !matchedClients.has(p.name));
+  if (unmatched.length) {
+    enriched.forEach(c => {
+      const cNameNorm = c.name.split(/[/,]/)[0].trim().toLowerCase();
+      unmatched.forEach(p => {
+        if (p.cliente.toLowerCase().includes(cNameNorm) && !c.projects.find(cp => cp.name === p.name)) {
+          c.projects.push(p);
+        }
+      });
+    });
+  }
 
   const internal = PROJECTS.filter(p=>!p.cliente);
-  const cvC = {"Ativo":"#34d399","Em Negociação":"#fbbf24","Inativo":"#64748b","Prospect":"#5b97cd"};
+  const cvC = {"Ativo":"#34d399","Em Negociação":"#fbbf24","Inativo":"#7b8fa3","Prospect":"#5b97cd"};
 
   function cCard(c, isInt) {
     const ct = {
@@ -390,26 +603,26 @@ function renderClients() {
       k: c.projects.filter(p=>p.status==="Backlog").length,
       d: c.projects.filter(p=>p.status==="Concluído").length,
     };
-    const sc2 = isInt ? "" : (cvC[c.status]||"#64748b");
+    const sc2 = isInt ? "" : (cvC[c.status]||"#7b8fa3");
     return `<div class="cli-card">
       <div class="cli-hdr">
         <div style="min-width:0">
-          <div class="cli-name">${c.name}</div>
-          ${!isInt?`<div class="cli-sub">${[c.segmento,c.pais].filter(Boolean).join(" · ")}</div>`:""}
+          <div class="cli-name">${esc(c.name)}</div>
+          ${!isInt?`<div class="cli-sub">${esc([c.segmento,c.pais].filter(Boolean).join(" · "))}</div>`:""}
         </div>
-        ${!isInt?`<span class="b" style="background:${sc2}18;color:${sc2};border:1px solid ${sc2}28">${c.status}</span>`:""}
+        ${!isInt?`<span class="b" style="background:${sc2}18;color:${sc2};border:1px solid ${sc2}28">${esc(c.status)}</span>`:""}
       </div>
       <div class="cli-stats">
-        <div class="cs"><div class="cs-v" style="color:#5b97cd">${ct.a}</div><div class="cs-l">Andando</div></div>
-        <div class="cs"><div class="cs-v" style="color:#f87171">${ct.b}</div><div class="cs-l">Bloqueado</div></div>
-        <div class="cs"><div class="cs-v" style="color:#64748b">${ct.k}</div><div class="cs-l">Backlog</div></div>
-        <div class="cs"><div class="cs-v" style="color:#34d399">${ct.d}</div><div class="cs-l">Concluído</div></div>
+        <div class="cs"><div class="cs-v" style="color:var(--rilix-blue-light)">${ct.a}</div><div class="cs-l">Andando</div></div>
+        <div class="cs"><div class="cs-v" style="color:var(--red)">${ct.b}</div><div class="cs-l">Bloqueado</div></div>
+        <div class="cs"><div class="cs-v" style="color:var(--gray)">${ct.k}</div><div class="cs-l">Backlog</div></div>
+        <div class="cs"><div class="cs-v" style="color:var(--green)">${ct.d}</div><div class="cs-l">Concluído</div></div>
       </div>
       <div class="cli-projs">
-        ${c.projects.map((p,i) => `<div class="cp-row">
+        ${c.projects.map(p => `<div class="cp-row">
           <div class="cp-sq" style="background:${CLR(p.status)}"></div>
-          <span class="cp-n">${p.name}</span>
-          ${p.prioridade?`<span class="b ${PB(p.prioridade)}">${p.prioridade}</span>`:""}
+          <span class="cp-n">${esc(p.name)}</span>
+          ${p.prioridade?`<span class="b ${PB(p.prioridade)}">${esc(p.prioridade)}</span>`:""}
         </div>`).join("")}
       </div>
     </div>`;
