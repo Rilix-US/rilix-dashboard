@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rilix — Gestão de Clientes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070e1c;
+  --surface:#0c1526;
+  --card:#111e33;
+  --card2:#162035;
+  --border:#1c2d47;
+  --border2:#243a5e;
+  --blue:#5b97cd;
+  --blue-l:#7ab3e0;
+  --blue-d:#3a6a9e;
+  --blue-glow:rgba(91,151,205,.12);
+  --text:#dce8f5;
+  --muted:#7a9dbf;
+  --dim:#3a5270;
+  --green:#34d399;--green-bg:rgba(52,211,153,.1);
+  --red:#f87171;--red-bg:rgba(248,113,113,.1);
+  --amber:#fbbf24;--amber-bg:rgba(251,191,36,.1);
+  --gray:#64748b;--gray-bg:rgba(100,116,139,.1);
+  --font:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+
+/* HEADER */
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.brand{display:flex;align-items:center;gap:16px}
+.logo{font-size:24px;font-weight:700;letter-spacing:.18em;color:var(--blue-l);font-family:var(--mono)}
+.logo-sub{font-size:11px;color:var(--muted);letter-spacing:.05em;margin-top:1px}
+.vdiv{width:1px;height:36px;background:var(--border)}
+.stats{display:flex;gap:28px}
+.stat-v{font-size:28px;font-weight:600;font-family:var(--mono);line-height:1}
+.stat-l{font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 28px;border-bottom:1px solid var(--border);background:rgba(12,21,38,.8);backdrop-filter:blur(8px);position:sticky;top:57px;z-index:9}
+.tabs{display:flex;gap:2px;background:var(--surface);padding:3px;border-radius:10px;border:1px solid var(--border)}
+.tab{padding:7px 20px;border-radius:8px;border:none;background:transparent;color:var(--muted);font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;letter-spacing:.01em}
+.tab.active{background:var(--blue-d);color:#fff;box-shadow:0 0 12px rgba(91,151,205,.25)}
+.tab:hover:not(.active){background:var(--card);color:var(--text)}
+
+/* CLOCK */
+.clock-wrap{display:flex;align-items:center;gap:16px}
+.clock{font-family:var(--mono);font-size:24px;font-weight:500;color:var(--text);letter-spacing:.05em}
+.clock-date{font-size:11px;color:var(--muted);margin-top:2px;text-transform:capitalize}
+.upd-row{display:flex;align-items:center;gap:8px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;transition:background .3s}
+.dot.loading{background:var(--amber);animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.upd-txt{font-size:11px;color:var(--dim)}
+.btn-refresh{background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer;transition:all .15s;font-family:var(--font)}
+.btn-refresh:hover{border-color:var(--blue);color:var(--blue-l)}
+
+/* MAIN */
+.main{padding:22px 28px 32px;min-height:calc(100vh - 110px)}
+
+/* KANBAN */
+.kanban{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.k-col{}
+.k-hdr{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:10px 10px 0 0;margin-bottom:12px}
+.k-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.k-count{font-family:var(--mono);font-size:22px;font-weight:700}
+.k-andamento{background:var(--blue-glow);border-bottom:2px solid var(--blue)}
+.k-andamento .k-title,.k-andamento .k-count{color:var(--blue-l)}
+.k-bloqueado{background:var(--red-bg);border-bottom:2px solid var(--red)}
+.k-bloqueado .k-title,.k-bloqueado .k-count{color:var(--red)}
+.k-backlog{background:var(--gray-bg);border-bottom:2px solid var(--gray)}
+.k-backlog .k-title,.k-backlog .k-count{color:var(--gray)}
+.k-concluido{background:var(--green-bg);border-bottom:2px solid var(--green)}
+.k-concluido .k-title,.k-concluido .k-count{color:var(--green)}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:8px;border-left:3px solid transparent;transition:border-color .2s}
+.card.s-and{border-left-color:var(--blue)}
+.card.s-blo{border-left-color:var(--red);border-color:rgba(248,113,113,.2)}
+.card.s-bac{border-left-color:var(--gray)}
+.card.s-con{border-left-color:var(--green)}
+.card.overdue{border-color:rgba(248,113,113,.35)}
+.card-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;line-height:1.45}
+.card-meta{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.empty-col{text-align:center;padding:28px 0;color:var(--dim);font-size:12px}
+
+/* BADGES */
+.b{display:inline-flex;align-items:center;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:500;white-space:nowrap;letter-spacing:.02em}
+.b-cli{background:rgba(91,151,205,.14);color:var(--blue-l);border:1px solid rgba(91,151,205,.2)}
+.b-urg{background:var(--red-bg);color:var(--red)}
+.b-alt{background:var(--amber-bg);color:var(--amber)}
+.b-med{background:rgba(251,191,36,.07);color:#c9961e}
+.b-bai{background:var(--gray-bg);color:var(--gray)}
+.b-per{background:var(--surface);color:var(--muted);border:1px solid var(--border)}
+.b-dt{background:transparent;color:var(--muted);font-family:var(--mono);font-size:10px}
+.b-dt.od{color:var(--red)}
+.b-s-and{background:rgba(91,151,205,.12);color:var(--blue-l)}
+.b-s-blo{background:var(--red-bg);color:var(--red)}
+.b-s-bac{background:var(--gray-bg);color:var(--gray)}
+.b-s-con{background:var(--green-bg);color:var(--green)}
+
+/* TIMELINE */
+.tl-row{display:flex;gap:16px;align-items:flex-start;padding:14px 18px;background:var(--card);border:1px solid var(--border);border-radius:0 12px 12px 0;margin-bottom:10px;border-left:3px solid transparent}
+.tl-row.od-row{border-left-color:var(--red);border-color:rgba(248,113,113,.2)}
+.tl-row.urg-row{border-left-color:var(--amber)}
+.tl-row.ok-row{border-left-color:var(--blue)}
+.tl-date{min-width:72px;text-align:center;flex-shrink:0}
+.tl-day{font-family:var(--mono);font-size:22px;font-weight:600;line-height:1}
+.tl-dif{font-size:11px;margin-top:4px}
+.od-txt .tl-day,.od-txt .tl-dif{color:var(--red)}
+.urg-txt .tl-day,.urg-txt .tl-dif{color:var(--amber)}
+.ok-txt .tl-day{color:var(--text)}.ok-txt .tl-dif{color:var(--muted)}
+.tl-sep{width:1px;align-self:stretch;background:var(--border);flex-shrink:0}
+.tl-name{font-size:14px;font-weight:500;color:var(--text);margin-bottom:7px}
+.tl-meta{display:flex;flex-wrap:wrap;gap:5px}
+.sec-label{font-size:11px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin:24px 0 10px 4px}
+.nd-row{display:flex;gap:10px;align-items:center;padding:9px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;opacity:.75}
+.nd-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.nd-name{font-size:13px;flex:1;color:var(--text)}
+
+/* CLIENTS */
+.cli-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(292px,1fr));gap:14px}
+.cli-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.cli-hdr{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;background:rgba(91,151,205,.04);gap:10px}
+.cli-name{font-size:14px;font-weight:600;color:var(--blue-l)}
+.cli-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.cli-stats{display:flex;border-bottom:1px solid var(--border)}
+.cs{flex:1;text-align:center;padding:9px 4px;border-right:1px solid var(--border)}
+.cs:last-child{border-right:none}
+.cs-v{font-family:var(--mono);font-size:20px;font-weight:700;line-height:1}
+.cs-l{font-size:10px;color:var(--dim);margin-top:3px;letter-spacing:.04em}
+.cli-projs{padding:10px 14px}
+.cp-row{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)}
+.cp-row:last-child{border-bottom:none}
+.cp-sq{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+.cp-n{font-size:12px;flex:1;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* LOADING / ERROR */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:22px}
+.l-logo{font-size:52px;font-weight:700;letter-spacing:.2em;color:var(--blue);opacity:.25;font-family:var(--mono)}
+.l-bar{width:220px;height:2px;background:var(--border);border-radius:2px;overflow:hidden;position:relative}
+.l-inner{position:absolute;top:0;height:100%;width:40%;background:var(--blue);animation:slide 1.5s ease-in-out infinite}
+@keyframes slide{0%{left:-40%}100%{left:100%}}
+.l-txt{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.error{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:14px;text-align:center;padding:0 40px}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* LAST UPDATE BAR */
+.last-upd{font-size:11px;color:var(--dim)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="brand">
+    <div>
+      <div class="logo">RILIX</div>
+      <div class="logo-sub">Gestão de Clientes</div>
+    </div>
+    <div class="vdiv"></div>
+    <div class="stats" id="stats">
+      <div><div class="stat-v" style="color:var(--muted)">—</div><div class="stat-l">Carregando</div></div>
+    </div>
+  </div>
+  <div class="clock-wrap">
+    <div>
+      <div class="upd-row" style="justify-content:flex-end;margin-bottom:4px">
+        <div class="dot loading" id="dot"></div>
+        <span class="upd-txt" id="upd">Carregando...</span>
+        <button class="btn-refresh" onclick="loadData()">↻ Atualizar</button>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:12px;justify-content:flex-end">
+        <div>
+          <div class="clock" id="clock">--:--</div>
+          <div class="clock-date" id="cdate">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="tabs">
+    <button class="tab active" onclick="setView('kanban',this)">⬛ Kanban</button>
+    <button class="tab" onclick="setView('timeline',this)">📅 Timeline</button>
+    <button class="tab" onclick="setView('clients',this)">👥 Por cliente</button>
+  </div>
+  <span class="last-upd" id="last-upd"></span>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="main">
+  <div class="loading">
+    <div class="l-logo">RILIX</div>
+    <div class="l-bar"><div class="l-inner"></div></div>
+    <div class="l-txt">Conectando ao Notion...</div>
+  </div>
+</div>
+
+<script>
+"use strict";
+let VIEW = "kanban", PROJECTS = [], CLIENTS = [];
+
+/* ── Clock ── */
+function tick() {
+  const n = new Date();
+  document.getElementById("clock").textContent = n.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+  document.getElementById("cdate").textContent = n.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long"});
+}
+setInterval(tick, 1000); tick();
+
+/* ── Helpers ── */
+const SC  = s => ({Em Andamento:"s-and",Bloqueado:"s-blo",Backlog:"s-bac",Concluído:"s-con"}[s]||"s-bac");
+const SB  = s => ({Em Andamento:"b-s-and",Bloqueado:"b-s-blo",Backlog:"b-s-bac",Concluído:"b-s-con"}[s]||"b-s-bac");
+const PB  = p => ({Urgente:"b-urg",Alta:"b-alt",Média:"b-med",Baixa:"b-bai"}[p]||"b-bai");
+const CLR = s => ({Em Andamento:"#5b97cd",Bloqueado:"#f87171",Backlog:"#64748b",Concluído:"#34d399"}[s]||"#64748b");
+
+function fmtDate(d) {
+  return new Date(d).toLocaleDateString("pt-BR",{day:"2-digit",month:"short"});
+}
+function isOD(p) {
+  return p.prazo && new Date(p.prazo) < new Date() && p.status !== "Concluído";
+}
+function metaHtml(p, showStatus) {
+  let h = "";
+  if (p.cliente) h += `<span class="b b-cli">${p.cliente}</span>`;
+  if (showStatus) h += `<span class="b ${SB(p.status)}">${p.status}</span>`;
+  if (p.prioridade) h += `<span class="b ${PB(p.prioridade)}">${p.prioridade}</span>`;
+  if (p.responsavel) h += `<span class="b b-per">${p.responsavel}</span>`;
+  if (p.prazo) {
+    const od = isOD(p);
+    h += `<span class="b b-dt${od?" od":""}">${fmtDate(p.prazo)}${od?" · atrasado":""}</span>`;
+  }
+  return h;
+}
+
+/* ── Fetch ── */
+async function loadData() {
+  const dot = document.getElementById("dot");
+  dot.className = "dot loading";
+  document.getElementById("upd").textContent = "Atualizando...";
+  try {
+    const r = await fetch("/api/data");
+    if (!r.ok) throw new Error("HTTP " + r.status + " — verifique o NOTION_TOKEN no Vercel");
+    const d = await r.json();
+    PROJECTS = d.projects || [];
+    CLIENTS  = d.clients  || [];
+    dot.className = "dot";
+    const t = new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+    document.getElementById("upd").textContent = "Ao vivo";
+    document.getElementById("last-upd").textContent = "Última atualização: " + t;
+    renderStats();
+    renderView();
+  } catch(e) {
+    dot.className = "dot"; dot.style.background = "var(--red)";
+    document.getElementById("upd").textContent = "Erro";
+    document.getElementById("main").innerHTML = `
+      <div class="error">
+        <div style="font-size:48px">⚠️</div>
+        <div style="color:var(--red);font-size:18px;font-weight:600">Erro ao conectar com o Notion</div>
+        <div style="color:var(--muted);font-size:13px">${e.message}</div>
+        <div style="color:var(--dim);font-size:12px;margin-top:4px">
+          Configure o <code style="background:var(--surface);padding:2px 6px;border-radius:4px">NOTION_TOKEN</code> nas variáveis de ambiente do Vercel
+        </div>
+        <button class="btn-refresh" onclick="loadData()" style="padding:10px 28px;font-size:14px;margin-top:8px">Tentar novamente</button>
+      </div>`;
+  }
+}
+
+function renderStats() {
+  const a = PROJECTS.filter(p=>p.status==="Em Andamento").length;
+  const b = PROJECTS.filter(p=>p.status==="Bloqueado").length;
+  const k = PROJECTS.filter(p=>p.status==="Backlog").length;
+  document.getElementById("stats").innerHTML = [
+    ["Em Andamento", a, "#5b97cd"],
+    ["Bloqueado",    b, "#f87171"],
+    ["Backlog",      k, "#64748b"],
+    ["Total",        PROJECTS.length, "#7a9dbf"],
+  ].map(([l,v,c]) => `<div><div class="stat-v" style="color:${c}">${v}</div><div class="stat-l">${l}</div></div>`).join("");
+}
+
+function setView(v, btn) {
+  VIEW = v;
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  btn.classList.add("active");
+  renderView();
+}
+
+function renderView() {
+  if (VIEW==="kanban")   renderKanban();
+  else if (VIEW==="timeline") renderTimeline();
+  else                   renderClients();
+}
+
+/* ── KANBAN ── */
+function renderKanban() {
+  const cols = [
+    {key:"Em Andamento", cls:"k-andamento"},
+    {key:"Bloqueado",    cls:"k-bloqueado"},
+    {key:"Backlog",      cls:"k-backlog"},
+    {key:"Concluído",   cls:"k-concluido"},
+  ];
+  const html = `<div class="kanban">` + cols.map(({key,cls}) => {
+    const items = PROJECTS.filter(p=>p.status===key);
+    return `<div class="k-col">
+      <div class="k-hdr ${cls}">
+        <span class="k-title">${key}</span>
+        <span class="k-count">${items.length}</span>
+      </div>
+      ${items.length===0
+        ? `<div class="empty-col">— vazio —</div>`
+        : items.map(p=>`<div class="card ${SC(p.status)}${isOD(p)?" overdue":""}">
+            <div class="card-name">${p.name}</div>
+            <div class="card-meta">${metaHtml(p,false)}</div>
+          </div>`).join("")
+      }
+    </div>`;
+  }).join("") + `</div>`;
+  document.getElementById("main").innerHTML = html;
+}
+
+/* ── TIMELINE ── */
+function renderTimeline() {
+  const today = new Date();
+  const withD = PROJECTS.filter(p=>p.prazo&&p.status!=="Concluído").sort((a,b)=>new Date(a.prazo)-new Date(b.prazo));
+  const noD   = PROJECTS.filter(p=>!p.prazo&&p.status!=="Concluído");
+  let html = "";
+
+  withD.forEach(p => {
+    const pDate = new Date(p.prazo);
+    const diff  = Math.round((pDate-today)/86400000);
+    const od    = diff < 0;
+    const urg   = diff >= 0 && diff <= 3;
+    const rowCls = od?"od-row":urg?"urg-row":"ok-row";
+    const txtCls = od?"od-txt":urg?"urg-txt":"ok-txt";
+    html += `<div class="tl-row ${rowCls}">
+      <div class="tl-date ${txtCls}">
+        <div class="tl-day">${pDate.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})}</div>
+        <div class="tl-dif">${od?Math.abs(diff)+"d atraso":diff===0?"hoje":diff+"d"}</div>
+      </div>
+      <div class="tl-sep"></div>
+      <div style="flex:1;min-width:0">
+        <div class="tl-name">${p.name}</div>
+        <div class="tl-meta">${metaHtml(p,true)}</div>
+      </div>
+    </div>`;
+  });
+
+  if (noD.length) {
+    html += `<div class="sec-label">Sem prazo definido</div>`;
+    noD.forEach(p => {
+      html += `<div class="nd-row">
+        <div class="nd-dot" style="background:${CLR(p.status)}"></div>
+        <span class="nd-name">${p.name}</span>
+        ${p.cliente?`<span class="b b-cli">${p.cliente}</span>`:""}
+        <span class="b ${SB(p.status)}">${p.status}</span>
+      </div>`;
+    });
+  }
+
+  if (!withD.length && !noD.length) html = `<div style="text-align:center;padding:60px 0;color:var(--dim)">Nenhum projeto ativo</div>`;
+  document.getElementById("main").innerHTML = html;
+}
+
+/* ── CLIENTS ── */
+function renderClients() {
+  const enriched = CLIENTS.map(c => ({
+    ...c,
+    projects: PROJECTS.filter(p => p.cliente && p.cliente.toLowerCase().includes(c.name.split(/[/,]/)[0].trim().toLowerCase()))
+  })).filter(c=>c.projects.length>0);
+
+  const internal = PROJECTS.filter(p=>!p.cliente);
+  const cvC = {"Ativo":"#34d399","Em Negociação":"#fbbf24","Inativo":"#64748b","Prospect":"#5b97cd"};
+
+  function cCard(c, isInt) {
+    const ct = {
+      a: c.projects.filter(p=>p.status==="Em Andamento").length,
+      b: c.projects.filter(p=>p.status==="Bloqueado").length,
+      k: c.projects.filter(p=>p.status==="Backlog").length,
+      d: c.projects.filter(p=>p.status==="Concluído").length,
+    };
+    const sc2 = isInt ? "" : (cvC[c.status]||"#64748b");
+    return `<div class="cli-card">
+      <div class="cli-hdr">
+        <div style="min-width:0">
+          <div class="cli-name">${c.name}</div>
+          ${!isInt?`<div class="cli-sub">${[c.segmento,c.pais].filter(Boolean).join(" · ")}</div>`:""}
+        </div>
+        ${!isInt?`<span class="b" style="background:${sc2}18;color:${sc2};border:1px solid ${sc2}28">${c.status}</span>`:""}
+      </div>
+      <div class="cli-stats">
+        <div class="cs"><div class="cs-v" style="color:#5b97cd">${ct.a}</div><div class="cs-l">Andando</div></div>
+        <div class="cs"><div class="cs-v" style="color:#f87171">${ct.b}</div><div class="cs-l">Bloqueado</div></div>
+        <div class="cs"><div class="cs-v" style="color:#64748b">${ct.k}</div><div class="cs-l">Backlog</div></div>
+        <div class="cs"><div class="cs-v" style="color:#34d399">${ct.d}</div><div class="cs-l">Concluído</div></div>
+      </div>
+      <div class="cli-projs">
+        ${c.projects.map((p,i) => `<div class="cp-row">
+          <div class="cp-sq" style="background:${CLR(p.status)}"></div>
+          <span class="cp-n">${p.name}</span>
+          ${p.prioridade?`<span class="b ${PB(p.prioridade)}">${p.prioridade}</span>`:""}
+        </div>`).join("")}
+      </div>
+    </div>`;
+  }
+
+  let html = `<div class="cli-grid">`;
+  enriched.forEach(c => { html += cCard(c, false); });
+  if (internal.length) html += cCard({name:"Operações internas",projects:internal}, true);
+  html += `</div>`;
+  document.getElementById("main").innerHTML = html;
+}
+
+/* ── Init ── */
+loadData();
+setInterval(loadData, 5 * 60 * 1000);
+</script>
+</body>
+</html>
