@@ -30,6 +30,7 @@ export default async function handler(req, res) {
     // Montar mapa de clientes id → nome
     const clients = (cliData.results || []).map((p) => ({
       id: p.id,
+      url: `https://notion.so/${p.id.replace(/-/g, "")}`,
       name: p.properties["Nome do Cliente"]?.title?.[0]?.plain_text || "",
       status: p.properties["Status"]?.select?.name || null,
       segmento: p.properties["Segmento"]?.select?.name || null,
@@ -45,6 +46,7 @@ export default async function handler(req, res) {
       const rel = p.properties["Cliente"]?.relation || [];
       const clientName = rel.length > 0 ? clientMap[rel[0].id] || null : null;
       return {
+        url: `https://notion.so/${p.id.replace(/-/g, "")}`,
         name: p.properties["Projeto"]?.title?.[0]?.plain_text || "",
         status: p.properties["Status"]?.select?.name || null,
         prioridade: p.properties["Prioridade"]?.select?.name || null,

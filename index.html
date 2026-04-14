@@ -111,6 +111,17 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 /* ─── CARDS ─── */
 .card{background:var(--card);border:1px solid var(--border);border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:8px;border-left:3px solid transparent;transition:all .2s ease}
 .card:hover{background:var(--card-hover);border-color:var(--border2)}
+a.card-link,a.tl-link,a.nd-link,a.cp-link{text-decoration:none;color:inherit;display:block}
+a.card-link:hover .card-name,a.tl-link:hover .tl-name,a.cp-link:hover .cp-n{text-decoration:underline;text-decoration-color:var(--rilix-blue);text-underline-offset:2px}
+a.tl-link{display:flex;gap:16px;align-items:flex-start;padding:14px 18px;background:var(--card);border:1px solid var(--border);border-radius:0 12px 12px 0;margin-bottom:10px;border-left:3px solid transparent;transition:all .2s ease}
+a.tl-link:hover{background:var(--card-hover)}
+a.tl-link.od-row{border-left-color:var(--red);border-color:rgba(248,113,113,.18)}
+a.tl-link.urg-row{border-left-color:var(--amber)}
+a.tl-link.ok-row{border-left-color:var(--blue)}
+a.nd-link{display:flex;gap:10px;align-items:center}
+a.cp-link{display:flex;gap:8px;align-items:center}
+.cli-hdr-link{text-decoration:none;color:inherit}
+.cli-hdr-link:hover .cli-name{text-decoration:underline;text-decoration-color:var(--rilix-blue);text-underline-offset:2px}
 .card.s-and{border-left-color:var(--blue)}
 .card.s-blo{border-left-color:var(--red);border-color:rgba(248,113,113,.18)}
 .card.s-bac{border-left-color:var(--gray)}
@@ -475,10 +486,11 @@ function renderKanban() {
         ? `<div class="empty-col">Nenhum projeto</div>`
         : items.map(p=>{
           const tt = tooltipText(p);
-          return `<div class="card ${SC(p.status)}${isOD(p)?" overdue":""}"${tt ? ` data-tooltip="${esc(tt)}"`:""}>
+          const wrap = p.url ? [`<a class="card-link" href="${esc(p.url)}" target="_blank" rel="noopener">`,`</a>`] : ['',''];
+          return `${wrap[0]}<div class="card ${SC(p.status)}${isOD(p)?" overdue":""}"${tt ? ` data-tooltip="${esc(tt)}"`:""}>
             <div class="card-name">${esc(p.name)}</div>
             <div class="card-meta">${metaHtml(p,false)}</div>
-          </div>`;
+          </div>${wrap[1]}`;
         }).join("")
       }
       </div>
@@ -539,7 +551,9 @@ function renderTimeline() {
       const urg   = p.diff >= 0 && p.diff <= 3;
       const rowCls = od?"od-row":urg?"urg-row":"ok-row";
       const txtCls = od?"od-txt":urg?"urg-txt":"ok-txt";
-      html += `<div class="tl-row ${rowCls}">
+      const tlOpen = p.url ? `<a class="tl-link ${rowCls}" href="${esc(p.url)}" target="_blank" rel="noopener">` : `<div class="tl-row ${rowCls}">`;
+      const tlClose = p.url ? `</a>` : `</div>`;
+      html += `${tlOpen}${p.url ? '' : ''}
         <div class="tl-date ${txtCls}">
           <div class="tl-day">${p.pDate.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})}</div>
           <div class="tl-dif">${od?Math.abs(p.diff)+"d atraso":p.diff===0?"hoje":p.diff+"d"}</div>
@@ -549,7 +563,7 @@ function renderTimeline() {
           <div class="tl-name">${esc(p.name)}</div>
           <div class="tl-meta">${metaHtml(p,true)}</div>
         </div>
-      </div>`;
+      ${tlClose}`;
     });
     html += `</div>`;
   });
@@ -557,12 +571,14 @@ function renderTimeline() {
   if (noD.length) {
     html += `<div class="sec-label">Sem prazo definido (${noD.length})</div>`;
     noD.forEach(p => {
-      html += `<div class="nd-row">
+      const ndTag = p.url ? 'a' : 'div';
+      const ndAttr = p.url ? ` class="nd-link nd-row" href="${esc(p.url)}" target="_blank" rel="noopener"` : ` class="nd-row"`;
+      html += `<${ndTag}${ndAttr}>
         <div class="nd-dot" style="background:${CLR(p.status)}"></div>
         <span class="nd-name">${esc(p.name)}</span>
         ${p.cliente?`<span class="b b-cli">${esc(p.cliente)}</span>`:""}
         <span class="b ${SB(p.status)}">${esc(p.status)}</span>
-      </div>`;
+      </${ndTag}>`;
     });
   }
 
@@ -604,14 +620,16 @@ function renderClients() {
       d: c.projects.filter(p=>p.status==="Concluído").length,
     };
     const sc2 = isInt ? "" : (cvC[c.status]||"#7b8fa3");
-    return `<div class="cli-card">
-      <div class="cli-hdr">
-        <div style="min-width:0">
+    const cliHdrInner = `<div style="min-width:0">
           <div class="cli-name">${esc(c.name)}</div>
           ${!isInt?`<div class="cli-sub">${esc([c.segmento,c.pais].filter(Boolean).join(" · "))}</div>`:""}
         </div>
-        ${!isInt?`<span class="b" style="background:${sc2}18;color:${sc2};border:1px solid ${sc2}28">${esc(c.status)}</span>`:""}
-      </div>
+        ${!isInt?`<span class="b" style="background:${sc2}18;color:${sc2};border:1px solid ${sc2}28">${esc(c.status)}</span>`:""}`;
+    const cliHdr = c.url
+      ? `<a class="cli-hdr cli-hdr-link" href="${esc(c.url)}" target="_blank" rel="noopener">${cliHdrInner}</a>`
+      : `<div class="cli-hdr">${cliHdrInner}</div>`;
+    return `<div class="cli-card">
+      ${cliHdr}
       <div class="cli-stats">
         <div class="cs"><div class="cs-v" style="color:var(--rilix-blue-light)">${ct.a}</div><div class="cs-l">Andando</div></div>
         <div class="cs"><div class="cs-v" style="color:var(--red)">${ct.b}</div><div class="cs-l">Bloqueado</div></div>
@@ -619,11 +637,15 @@ function renderClients() {
         <div class="cs"><div class="cs-v" style="color:var(--green)">${ct.d}</div><div class="cs-l">Concluído</div></div>
       </div>
       <div class="cli-projs">
-        ${c.projects.map(p => `<div class="cp-row">
+        ${c.projects.map(p => {
+          const cpTag = p.url ? 'a' : 'div';
+          const cpAttr = p.url ? ` class="cp-link cp-row" href="${esc(p.url)}" target="_blank" rel="noopener"` : ` class="cp-row"`;
+          return `<${cpTag}${cpAttr}>
           <div class="cp-sq" style="background:${CLR(p.status)}"></div>
           <span class="cp-n">${esc(p.name)}</span>
           ${p.prioridade?`<span class="b ${PB(p.prioridade)}">${esc(p.prioridade)}</span>`:""}
-        </div>`).join("")}
+        </${cpTag}>`;
+        }).join("")}
       </div>
     </div>`;
   }
