@@ -1,19 +1,37 @@
+import { verifyToken, getTokenFromCookies } from "./auth.js";
+
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  // --- Security headers ---
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader("Cache-Control", "no-store");
 
-  const token = process.env.NOTION_TOKEN;
-  if (!token) return res.status(500).json({ error: "NOTION_TOKEN não configurado no Vercel" });
+  // --- Somente GET ---
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Metodo nao permitido" });
+  }
+
+  // --- Autenticacao ---
+  const token = getTokenFromCookies(req.headers.cookie);
+  if (!verifyToken(token)) {
+    return res.status(401).json({ error: "Nao autenticado" });
+  }
+
+  // --- Notion config ---
+  const notionToken = process.env.NOTION_TOKEN;
+  if (!notionToken) {
+    return res.status(500).json({ error: "Servico indisponivel" });
+  }
+
+  const DB_PROJETOS = process.env.NOTION_DB_PROJETOS || "d7bf8c9e8b744dd794d7563870015aa1";
+  const DB_CLIENTES = process.env.NOTION_DB_CLIENTES || "18a46efea81f477fb50810a5665c68b7";
 
   const headers = {
-    Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${notionToken}`,
     "Notion-Version": "2022-06-28",
     "Content-Type": "application/json",
   };
-
-  // IDs dos bancos de dados Rilix no Notion
-  const DB_PROJETOS = "d7bf8c9e8b744dd794d7563870015aa1";
-  const DB_CLIENTES = "18a46efea81f477fb50810a5665c68b7";
 
   try {
     const [projRes, cliRes] = await Promise.all([
@@ -27,7 +45,6 @@ export default async function handler(req, res) {
 
     const [projData, cliData] = await Promise.all([projRes.json(), cliRes.json()]);
 
-    // Montar mapa de clientes id → nome
     const clients = (cliData.results || []).map((p) => ({
       id: p.id,
       url: `https://notion.so/${p.id.replace(/-/g, "")}`,
@@ -41,7 +58,6 @@ export default async function handler(req, res) {
     const clientMap = {};
     clients.forEach((c) => { clientMap[c.id] = c.name; });
 
-    // Mapear projetos com nome do cliente via relation
     const projects = (projData.results || []).map((p) => {
       const rel = p.properties["Cliente"]?.relation || [];
       const clientName = rel.length > 0 ? clientMap[rel[0].id] || null : null;
@@ -60,6 +76,7 @@ export default async function handler(req, res) {
 
     res.json({ projects, clients, updatedAt: new Date().toISOString() });
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    console.error("Notion API error:", e);
+    res.status(500).json({ error: "Erro ao consultar dados" });
   }
 }
